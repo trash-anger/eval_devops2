@@ -10,11 +10,30 @@ services:
     volumes:
       - web:/var/www/html:rw
       - log:/var/log/nginx:rw
+    links:
+      - mariadb:db
     deploy:
       replicas: 5
+      restart_policy:
+        condition: on-failure
+################################################################################
+  mariadb:
+    container_name: mariadb
+    image: mariadb:10.1
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=estiam
+      - MYSQL_USER=php_user
+      - MYSQL_PASSWORD=sdrugntqqsciur
+    volumes:
+      - database:/var/lib/mysql/estiam:rw
+    deploy:
+      replicas: 2
       restart_policy:
         condition: on-failure
 ################################################################################
 volumes:
   web:
   log:
+  database:
