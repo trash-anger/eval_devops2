@@ -1,99 +1,0 @@
-Sending build context to Docker daemon  8.192kB
-Step 1/13 : FROM debian:stretch-slim
- ---> 9a091084b515
-Step 2/13 : MAINTAINER Alexandre MORAT <alexandre.morat@apcm.ovh>
- ---> Using cache
- ---> e788db6e0194
-Step 3/13 : RUN echo "deb http://deb.debian.org/debian/ stretch main" > /etc/apt/sources.list
- ---> Running in 42e9ad12e873
-Removing intermediate container 42e9ad12e873
- ---> 561a2d5ed745
-Step 4/13 : RUN apt-get update
- ---> Running in cad79fcbafdd
-Ign:1 http://cdn-fastly.deb.debian.org/debian stretch InRelease
-Get:2 http://cdn-fastly.deb.debian.org/debian stretch Release [118 kB]
-Get:3 http://cdn-fastly.deb.debian.org/debian stretch Release.gpg [2434 B]
-Get:4 http://cdn-fastly.deb.debian.org/debian stretch/main amd64 Packages [9531 kB]
-Fetched 9652 kB in 5s (1741 kB/s)
-Reading package lists...
-Removing intermediate container cad79fcbafdd
- ---> 4c70f879f76f
-Step 5/13 : RUN apt-get install -y nginx-common=1.10* libnginx-mod-http-echo=1.10* libssl1.1=1.1* nginx-light=1.10*
- ---> Running in 1442f3a4e1b5
-Reading package lists...
-Building dependency tree...
-Reading state information...
-Suggested packages:
-  fcgiwrap nginx-doc ssl-cert
-The following NEW packages will be installed:
-  libnginx-mod-http-echo libssl1.1 nginx-common nginx-light
-0 upgraded, 4 newly installed, 0 to remove and 0 not upgraded.
-Need to get 1978 kB of archives.
-After this operation, 5081 kB of additional disk space will be used.
-Get:1 http://cdn-fastly.deb.debian.org/debian stretch/main amd64 libssl1.1 amd64 1.1.0f-3+deb9u1 [1342 kB]
-Get:2 http://cdn-fastly.deb.debian.org/debian stretch/main amd64 nginx-common all 1.10.3-1+deb9u1 [104 kB]
-Get:3 http://cdn-fastly.deb.debian.org/debian stretch/main amd64 libnginx-mod-http-echo amd64 1.10.3-1+deb9u1 [96.9 kB]
-Get:4 http://cdn-fastly.deb.debian.org/debian stretch/main amd64 nginx-light amd64 1.10.3-1+deb9u1 [435 kB]
-[91mdebconf: delaying package configuration, since apt-utils is not installed
-[0mFetched 1978 kB in 0s (2193 kB/s)
-Selecting previously unselected package libssl1.1:amd64.
-(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 6315 files and directories currently installed.)
-Preparing to unpack .../libssl1.1_1.1.0f-3+deb9u1_amd64.deb ...
-Unpacking libssl1.1:amd64 (1.1.0f-3+deb9u1) ...
-Selecting previously unselected package nginx-common.
-Preparing to unpack .../nginx-common_1.10.3-1+deb9u1_all.deb ...
-Unpacking nginx-common (1.10.3-1+deb9u1) ...
-Selecting previously unselected package libnginx-mod-http-echo.
-Preparing to unpack .../libnginx-mod-http-echo_1.10.3-1+deb9u1_amd64.deb ...
-Unpacking libnginx-mod-http-echo (1.10.3-1+deb9u1) ...
-Selecting previously unselected package nginx-light.
-Preparing to unpack .../nginx-light_1.10.3-1+deb9u1_amd64.deb ...
-Unpacking nginx-light (1.10.3-1+deb9u1) ...
-Setting up nginx-common (1.10.3-1+deb9u1) ...
-debconf: unable to initialize frontend: Dialog
-debconf: (TERM is not set, so the dialog frontend is not usable.)
-debconf: falling back to frontend: Readline
-debconf: unable to initialize frontend: Readline
-debconf: (Can't locate Term/ReadLine.pm in @INC (you may need to install the Term::ReadLine module) (@INC contains: /etc/perl /usr/local/lib/x86_64-linux-gnu/perl/5.24.1 /usr/local/share/perl/5.24.1 /usr/lib/x86_64-linux-gnu/perl5/5.24 /usr/share/perl5 /usr/lib/x86_64-linux-gnu/perl/5.24 /usr/share/perl/5.24 /usr/local/lib/site_perl /usr/lib/x86_64-linux-gnu/perl-base .) at /usr/share/perl5/Debconf/FrontEnd/Readline.pm line 7.)
-debconf: falling back to frontend: Teletype
-Processing triggers for libc-bin (2.24-11+deb9u1) ...
-Setting up libssl1.1:amd64 (1.1.0f-3+deb9u1) ...
-debconf: unable to initialize frontend: Dialog
-debconf: (TERM is not set, so the dialog frontend is not usable.)
-debconf: falling back to frontend: Readline
-debconf: unable to initialize frontend: Readline
-debconf: (Can't locate Term/ReadLine.pm in @INC (you may need to install the Term::ReadLine module) (@INC contains: /etc/perl /usr/local/lib/x86_64-linux-gnu/perl/5.24.1 /usr/local/share/perl/5.24.1 /usr/lib/x86_64-linux-gnu/perl5/5.24 /usr/share/perl5 /usr/lib/x86_64-linux-gnu/perl/5.24 /usr/share/perl/5.24 /usr/local/lib/site_perl /usr/lib/x86_64-linux-gnu/perl-base .) at /usr/share/perl5/Debconf/FrontEnd/Readline.pm line 7.)
-debconf: falling back to frontend: Teletype
-Setting up libnginx-mod-http-echo (1.10.3-1+deb9u1) ...
-Setting up nginx-light (1.10.3-1+deb9u1) ...
-invoke-rc.d: could not determine current runlevel
-invoke-rc.d: policy-rc.d denied execution of start.
-Processing triggers for libc-bin (2.24-11+deb9u1) ...
-Removing intermediate container 1442f3a4e1b5
- ---> 90bf6297def9
-Step 6/13 : COPY default /etc/nginx/sites-available/default
- ---> 83520273e8bc
-Step 7/13 : COPY index.php /var/www/html/index.php
- ---> 03ab931e9fcc
-Step 8/13 : COPY insert.php /var/www/html/insert.php
- ---> 58815de018de
-Step 9/13 : COPY show.php /var/www/html/show.php
- ---> 9d088a5356ee
-Step 10/13 : VOLUME ["/var/www/html"]
- ---> Running in 96fae3d19ac5
-Removing intermediate container 96fae3d19ac5
- ---> 7e90ea9f7be8
-Step 11/13 : EXPOSE 80
- ---> Running in dd3ae825bf60
-Removing intermediate container dd3ae825bf60
- ---> 8025940d0107
-Step 12/13 : STOPSIGNAL SIGTERM
- ---> Running in f556e4c92a05
-Removing intermediate container f556e4c92a05
- ---> caedd72827b0
-Step 13/13 : CMD ["nginx", "-g", "daemon off;"]
- ---> Running in baec1df618c4
-Removing intermediate container baec1df618c4
- ---> 17aff88ea033
-Successfully built 17aff88ea033
-Successfully tagged overpower/nginx:latest
