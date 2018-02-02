@@ -14,7 +14,6 @@ read -p "Press any key to continue... " -n1 -s
 docker rm -f nginx
 docker volume rm eval_web eval_log
 
-cd eval
 git checkout v1
 cd nginx-php-fpm
 docker build -t nginx-php-fpm:1.0 .
@@ -32,7 +31,6 @@ read -p "Press any key to continue... " -n1 -s
 docker rm -f nginx
 docker volume rm eval_web eval_log
 
-cd eval
 git checkout v2
 cd nginx-php-fpm
 docker build -t nginx-php-fpm:2.0 .
@@ -49,7 +47,6 @@ read -p "Press any key to continue... " -n1 -s
 docker rm -f nginx
 docker volume prune -f
 
-cd eval
 git checkout v3
 cd nginx-php-fpm
 docker build -t nginx-php-fpm:3.0 .
