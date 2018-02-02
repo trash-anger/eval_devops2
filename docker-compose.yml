@@ -3,7 +3,7 @@ services:
 ################################################################################
   nginx:
     container_name: nginx
-    image: nginx-php-fpm:1.0
+    image: nginx-php-fpm:3.0
     restart: always
     ports:
       - 8080:80
