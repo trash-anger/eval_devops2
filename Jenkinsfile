@@ -1,4 +1,4 @@
-node {
+PhpPipelineJenkinsfile {
    stage('Preparation') {
      checkout scm
    }
