@@ -1,3 +1,5 @@
+import jenkins.model.*
+jenkins = Jenkins.instance
 node {
    stage('Preparation') {
       checkout scm
