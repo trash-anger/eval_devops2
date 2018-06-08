@@ -10,13 +10,13 @@ Bien qu'un peu plus complexe à mettre en place, l'utilisation de dind (docker i
 
 Le build est exécuté avec un job de type multibranch pipeline :
 image.png
-![image.png](https://raw.githubusercontent.com/trash-anger/eval_devops2/v1/img/img1.png)
+![image.png](https://raw.githubusercontent.com/trash-anger/eval_devops2/v3/img/img1.png)
 
 L'intérêt de cette méthode est que le pipeline ne nécessite qu'un simple Jenkinsfile pour toutes les branches.
-![image.png](https://raw.githubusercontent.com/trash-anger/eval_devops2/v1/img/img2.png)
+![image.png](https://raw.githubusercontent.com/trash-anger/eval_devops2/v3/img/img2.png)
 
 Les builds sont triggués par un webhook configuré dans github :
-![image.png](https://raw.githubusercontent.com/trash-anger/eval_devops2/v1/img/img3.png)
+![image.png](https://raw.githubusercontent.com/trash-anger/eval_devops2/v3/img/img3.png)
 
 L'intérêt de cette méthode est que le build est triggué uniquement lorsqu'une modification intervient sur une branche et il ne s'opère que sur cette branche.
 
