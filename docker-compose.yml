@@ -3,7 +3,7 @@ services:
 ################################################################################
   nginx:
     container_name: nginx
-    image: trash-anger/eval_devops2
+    image: nginx-php-fpm:1.0
     restart: always
     ports:
       - 8080:80
