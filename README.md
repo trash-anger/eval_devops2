@@ -1,66 +1,76 @@
 ![docker hub](https://img.shields.io/docker/pulls/trashanger/devops2.svg?style=flat-square)
 ![docker hub](https://img.shields.io/docker/stars/trashanger/devops2.svg?style=flat-square)
 
-## Overview
-This is a Dockerfile/image to build a container for nginx and php-fpm, with the ability to pull website code from git when the container is created, as well as allowing the container to push and pull changes to the code to and from git. The container also has the ability to update templated files with variables passed to docker in order to update your code and settings. There is support for lets encrypt SSL configurations, custom nginx configs, core nginx/PHP variable overrides for running preferences, X-Forwarded-For headers and UID mapping for local volume support.
-trig test
+https://hub.docker.com/r/trashanger/devops2/tags/
+https://github.com/trash-anger/eval_devops2
 
-If you have improvements or suggestions please open an issue or pull request on the GitHub project page.
+Avec l'application de bonnes pratiques pour la sécurité du pipeline de build demandé pour l'évaluation devops 2, certains éléments ne sont pas visible dans le .zip de rendu.
 
-### Versioning
-| Docker Tag | GitHub Release | Nginx Version | PHP Version | Alpine Version |
-|-----|-------|-----|--------|--------|
-| latest | Master Branch |1.13.7 | 7.1.12 | 3.4 |
+Bien qu'un peu plus complexe à mettre en place, l'utilisation de dind (docker in docker) est plus sécurisé que celle de dood. 
 
-For other tags please see: [versioning](https://github.com/richarvey/nginx-php-fpm/blob/master/docs/versioning.md)
+Le build est exécuté avec un job de type multibranch pipeline :
+image.png
+![image.png](https://raw.githubusercontent.com/trash-anger/eval_devops2/v1/img/img1.png)
 
-### Links
-- [https://github.com/richarvey/nginx-php-fpm](https://github.com/richarvey/nginx-php-fpm)
-- [https://registry.hub.docker.com/u/richarvey/nginx-php-fpm/](https://registry.hub.docker.com/u/richarvey/nginx-php-fpm/)
+L'intérêt de cette méthode est que le pipeline ne nécessite qu'un simple Jenkinsfile pour toutes les branches.
+![image.png](https://raw.githubusercontent.com/trash-anger/eval_devops2/v1/img/img2.png)
 
-## Quick Start
-To pull from docker hub:
+Les builds sont triggués par un webhook configuré dans github :
+![image.png](https://raw.githubusercontent.com/trash-anger/eval_devops2/v1/img/img3.png)
+
+L'intérêt de cette méthode est que le build est triggué uniquement lorsqu'une modification intervient sur une branche et il ne s'opère que sur cette branche.
+
+Voici le xml de config de ce pipeline :
 ```
-docker pull richarvey/nginx-php-fpm:latest
-```
-### Running
-To simply run the container:
-```
-sudo docker run -d richarvey/nginx-php-fpm
-```
-To dynamically pull code from git when starting:
-```
-docker run -d -e 'GIT_EMAIL=email_address' -e 'GIT_NAME=full_name' -e 'GIT_USERNAME=git_username' -e 'GIT_REPO=github.com/project' -e 'GIT_PERSONAL_TOKEN=<long_token_string_here>' richarvey/nginx-php-fpm:latest
+cat ./jobs/PhpPipeline/config.xml
+<?xml version='1.1' encoding='UTF-8'?>
+<flow-definition plugin="workflow-job@2.12.2">
+  <actions/>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <org.jenkinsci.plugins.workflow.job.properties.PipelineTriggersJobProperty>
+      <triggers>
+        <com.cloudbees.jenkins.GitHubPushTrigger plugin="github@1.29.1">
+          <spec></spec>
+        </com.cloudbees.jenkins.GitHubPushTrigger>
+      </triggers>
+    </org.jenkinsci.plugins.workflow.job.properties.PipelineTriggersJobProperty>
+  </properties>
+  <definition class="org.jenkinsci.plugins.workflow.cps.CpsScmFlowDefinition" plugin="workflow-cps@2.45">
+    <scm class="hudson.plugins.git.GitSCM" plugin="git@3.9.1">
+      <configVersion>2</configVersion>
+      <userRemoteConfigs>
+        <hudson.plugins.git.UserRemoteConfig>
+          <url>https://github.com/trash-anger/eval_devops2.git</url>
+          <credentialsId>github_cred</credentialsId>
+        </hudson.plugins.git.UserRemoteConfig>
+      </userRemoteConfigs>
+      <branches>
+        <hudson.plugins.git.BranchSpec>
+          <name>*/v1</name>
+        </hudson.plugins.git.BranchSpec>
+      </branches>
+      <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
+      <submoduleCfg class="list"/>
+      <extensions/>
+    </scm>
+    <scriptPath>Jenkinsfile</scriptPath>
+    <lightweight>true</lightweight>
+  </definition>
+  <triggers/>
+  <disabled>false</disabled>
+</flow-definition>
 ```
 
-You can then browse to ```http://<DOCKER_HOST>``` to view the default install files. To find your ```DOCKER_HOST``` use the ```docker inspect``` to get the IP address (normally 172.17.0.2)
+L'utilisation d'un multibranch pipeline nous permet aussi de profiter d'une variable non présente dans les autres type de jobs : $(BRANCH_NAME). Il nous à été particulièrement utile car il nous permet de builder nos images avec un tag et de pousser celle-ci indépendamment sur le hub.
 
-For more detailed examples and explanations please refer to the documentation.
-## Documentation
+```
+docker exec -ti dind_jenkins_1 sh -c "docker images"
+REPOSITORY           TAG                 IMAGE ID            CREATED             SIZE
+trashanger/devops2   v2                  c640de28fd35        About an hour ago   276MB
+trashanger/devops2   v3                  3ea97d745e56        About an hour ago   276MB
+trashanger/devops2   v1                  234d684008b6        2 hours ago         285MB
+```
 
-- [Building from source](https://github.com/richarvey/nginx-php-fpm/blob/master/docs/building.md)
-- [Versioning](https://github.com/richarvey/nginx-php-fpm/blob/master/docs/versioning.md)
-- [Config Flags](https://github.com/richarvey/nginx-php-fpm/blob/master/docs/config_flags.md)
-- [Git Auth](https://github.com/richarvey/nginx-php-fpm/blob/master/docs/git_auth.md)
- - [Personal Access token](https://github.com/richarvey/nginx-php-fpm/blob/master/docs/git_auth.md#personal-access-token)
- - [SSH Keys](https://github.com/richarvey/nginx-php-fpm/blob/master/docs/git_auth.md#ssh-keys)
-- [Git Commands](https://github.com/richarvey/nginx-php-fpm/blob/master/docs/git_commands.md)
- - [Push](https://github.com/richarvey/nginx-php-fpm/blob/master/docs/git_commands.md#push-code-to-git)
- - [Pull](https://github.com/richarvey/nginx-php-fpm/blob/master/docs/git_commands.md#pull-code-from-git-refresh)
-- [Repository layout / webroot](https://github.com/richarvey/nginx-php-fpm/blob/master/docs/repo_layout.md)
- - [webroot](https://github.com/richarvey/nginx-php-fpm/blob/master/docs/repo_layout.md#src--webroot)
-- [User / Group Identifiers](https://github.com/richarvey/nginx-php-fpm/blob/master/docs/UID_GID_Mapping.md)
-- [Custom Nginx Config files](https://github.com/richarvey/nginx-php-fpm/blob/master/docs/nginx_configs.md)
- - [REAL IP / X-Forwarded-For Headers](https://github.com/richarvey/nginx-php-fpm/blob/master/docs/nginx_configs.md#real-ip--x-forwarded-for-headers)
-- [Scripting and Templating](https://github.com/richarvey/nginx-php-fpm/blob/master/docs/scripting_templating.md)
- - [Environment Variables](https://github.com/richarvey/nginx-php-fpm/blob/master/docs/scripting_templating.md#using-environment-variables--templating)
-- [Lets Encrypt Support](https://github.com/richarvey/nginx-php-fpm/blob/master/docs/lets_encrypt.md)
- - [Setup](https://github.com/richarvey/nginx-php-fpm/blob/master/docs/lets_encrypt.md#setup)
- - [Renewal](https://github.com/richarvey/nginx-php-fpm/blob/master/docs/lets_encrypt.md#renewal)
-- [PHP Modules](https://github.com/richarvey/nginx-php-fpm/blob/master/docs/php_modules.md)
-- [Xdebug](https://github.com/richarvey/nginx-php-fpm/blob/master/docs/xdebug.md)
-- [Logging and Errors](https://github.com/richarvey/nginx-php-fpm/blob/master/docs/logs.md)
-
-## Guides
-- [Running in Kubernetes](https://github.com/richarvey/nginx-php-fpm/blob/master/docs/guides/kubernetes.md)
-- [Using Docker Compose](https://github.com/richarvey/nginx-php-fpm/blob/master/docs/guides/docker_compose.md)
+Les informations d'authentification sont toutes stockées dans la configuration interne à Jenkins, ce qui les rends non visible des développeurs travaillant sur le projet. 
