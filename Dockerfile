@@ -1,6 +1,6 @@
 FROM php:7.1.3-fpm-alpine
 
-LABEL maintainer="Alexandre MORAT <alexandre.morat@estiam.com>"
+LABEL maintainer="Florian Frouin <trash.anger@gmail.com>"
 
 ENV php_conf /usr/local/etc/php-fpm.conf
 ENV fpm_conf /usr/local/etc/php-fpm.d/www.conf
