@@ -4,7 +4,7 @@ node {
    }
    stage('docker build/push') {
       docker.withRegistry('https://index.docker.io/v1/', 'docker-hub') {
-         def app = docker.build("trashanger/devops2:${env.GIT_BRANCH}", '.').push()
+         def app = docker.build("trashanger/devops2:${BRANCH_NAME}", '.').push()
       }
    }
 }
